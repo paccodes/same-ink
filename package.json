@@ -1,0 +1,63 @@
+{
+  "name": "same-ink",
+  "displayName": "Same Ink",
+  "version": "0.1.0",
+  "description": "Highlights code blocks in the Markdown preview with your current editor color theme.",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "markdown",
+    "preview",
+    "syntax highlighting",
+    "code blocks",
+    "color theme",
+    "shiki"
+  ],
+  "homepage": "https://github.com/paccodes/same-ink#README",
+  "bugs": {
+    "url": "https://github.com/paccodes/same-ink/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paccodes/same-ink.git"
+  },
+  "license": "MIT",
+  "publisher": "metaphore",
+  "main": "./out/extension.js",
+  "files": [
+    "out/**/*.js",
+    "icons/icon.png",
+    "LICENSE",
+    "node_modules/**"
+  ],
+  "scripts": {
+    "compile": "tsc -p .",
+    "package": "vsce package -o same-ink.vsix",
+    "publish": "npm run package && npm run publish:vsce && npm run publish:ovsx",
+    "publish:ovsx": "ovsx publish -i same-ink.vsix",
+    "publish:vsce": "vsce publish -i same-ink.vsix",
+    "vscode:prepublish": "npm run compile",
+    "watch": "tsc -w -p ."
+  },
+  "contributes": {
+    "markdown.markdownItPlugins": true
+  },
+  "activationEvents": [],
+  "dependencies": {
+    "jsonc-parser": "^3.3.1",
+    "shiki": "^4.6.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.2.0",
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^4.1.1",
+    "ovsx": "^1.4.0",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "icon": "icons/icon.png"
+}
