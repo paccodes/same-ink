@@ -29,7 +29,12 @@ async function requestLanguage(language: string): Promise<void> {
 }
 
 export function refreshPreview(): void {
-  commands.executeCommand("markdown.preview.refresh");
+  commands.executeCommand("markdown.preview.refresh").then(
+    () => {},
+    () => {
+      // The Markdown extension may be disabled; nothing to refresh.
+    },
+  );
 }
 
 export async function createHighlighter(): Promise<void> {
