@@ -33,7 +33,7 @@ export function getThemeFile(
   const themeFile: ThemeFile = parse(readFileSync(path, "utf8")) ?? {};
 
   if (!themeFile.include) {
-    return themeFile;
+    return { ...themeFile, tokenColors: getTokenColors(themeFile) };
   }
 
   const baseThemeFile = getThemeFile(
