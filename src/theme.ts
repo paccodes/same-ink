@@ -1,9 +1,25 @@
 import { readFileSync } from "fs";
 import { parse } from "jsonc-parser";
 import { dirname, join, resolve } from "path";
-import { ColorThemeKind, extensions, window, workspace } from "vscode";
+import {
+  ColorThemeKind,
+  ConfigurationChangeEvent,
+  extensions,
+  window,
+  workspace,
+} from "vscode";
 
 import type { ThemeContribution, ThemeFile } from "./types";
+
+const colorThemeSettings = [
+  "window.autoDetectColorScheme",
+  "window.autoDetectHighContrast",
+  "workbench.colorTheme",
+  "workbench.preferredDarkColorTheme",
+  "workbench.preferredHighContrastColorTheme",
+  "workbench.preferredHighContrastLightColorTheme",
+  "workbench.preferredLightColorTheme",
+];
 
 const uiThemeByKind: Record<ColorThemeKind, string> = {
   [ColorThemeKind.Light]: "vs",
@@ -116,5 +132,13 @@ export function getActiveColorTheme(): string | undefined {
         getThemeContributionAndExtensionPath(candidateTheme)?.themeContribution
           .uiTheme === uiThemeByKind[kind],
     ) ?? candidateThemes.find(Boolean)
+  );
+}
+
+export function affectsActiveColorTheme(
+  event: ConfigurationChangeEvent,
+): boolean {
+  return colorThemeSettings.some((setting) =>
+    event.affectsConfiguration(setting),
   );
 }

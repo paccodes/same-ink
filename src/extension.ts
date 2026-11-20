@@ -9,7 +9,7 @@ import {
   refreshPreview,
   setTheme,
 } from "./highlighter";
-import { getActiveColorTheme } from "./theme";
+import { affectsActiveColorTheme, getActiveColorTheme } from "./theme";
 
 export async function activate(context: ExtensionContext) {
   let lastColorTheme: string | undefined;
@@ -44,7 +44,11 @@ export async function activate(context: ExtensionContext) {
 
   context.subscriptions.push(
     window.onDidChangeActiveColorTheme(reload),
-    workspace.onDidChangeConfiguration(reload),
+    workspace.onDidChangeConfiguration((event) => {
+      if (affectsActiveColorTheme(event)) {
+        reload();
+      }
+    }),
     extensions.onDidChange(() => {
       if (!getTheme()) {
         lastColorTheme = undefined;
