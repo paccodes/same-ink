@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 import { parse } from "jsonc-parser";
-import { dirname, join } from "path";
+import { dirname, join, resolve } from "path";
 import { ColorThemeKind, extensions, window, workspace } from "vscode";
 
 import type { ThemeContribution, ThemeFile } from "./types";
@@ -18,14 +18,28 @@ function getTokenColors(
   return Array.isArray(theme.tokenColors) ? theme.tokenColors : [];
 }
 
-export function getThemeFile(file: string): ThemeFile {
-  const themeFile: ThemeFile = parse(readFileSync(file, "utf8")) ?? {};
+export function getThemeFile(
+  file: string,
+  visitedPaths: ReadonlySet<string> = new Set(),
+): ThemeFile {
+  const path = resolve(file);
+
+  if (visitedPaths.has(path)) {
+    throw new Error(
+      `Theme include cycle: ${[...visitedPaths, path].join(" -> ")}`,
+    );
+  }
+
+  const themeFile: ThemeFile = parse(readFileSync(path, "utf8")) ?? {};
 
   if (!themeFile.include) {
     return themeFile;
   }
 
-  const baseThemeFile = getThemeFile(join(dirname(file), themeFile.include));
+  const baseThemeFile = getThemeFile(
+    join(dirname(path), themeFile.include),
+    new Set([...visitedPaths, path]),
+  );
 
   return {
     ...baseThemeFile,
