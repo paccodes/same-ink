@@ -31,6 +31,10 @@ export function getThemeFile(file: string): ThemeFile {
     ...baseThemeFile,
     ...themeFile,
     colors: { ...baseThemeFile.colors, ...themeFile.colors },
+    semanticTokenColors: {
+      ...baseThemeFile.semanticTokenColors,
+      ...themeFile.semanticTokenColors,
+    },
     tokenColors: [
       ...getTokenColors(baseThemeFile),
       ...getTokenColors(themeFile),
