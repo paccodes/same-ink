@@ -75,15 +75,17 @@ export function getThemeFile(
 export function getThemeContributionAndExtensionPath(
   theme: string,
 ): { themeContribution: ThemeContribution; extensionPath: string } | undefined {
-  for (const extension of extensions.all) {
-    const themeContributions: ThemeContribution[] =
-      extension.packageJSON?.contributes?.themes ?? [];
-    const themeContribution = themeContributions.find(
-      ({ id, label }) => id === theme || label === theme,
-    );
+  for (const key of ["id", "label"] as const) {
+    for (const extension of extensions.all) {
+      const themeContributions: ThemeContribution[] =
+        extension.packageJSON?.contributes?.themes ?? [];
+      const themeContribution = themeContributions.find(
+        (contribution) => contribution[key] === theme,
+      );
 
-    if (themeContribution) {
-      return { themeContribution, extensionPath: extension.extensionPath };
+      if (themeContribution) {
+        return { themeContribution, extensionPath: extension.extensionPath };
+      }
     }
   }
 }
