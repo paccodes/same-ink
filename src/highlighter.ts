@@ -2,15 +2,14 @@ import { join } from "path";
 import type { BundledLanguage, Highlighter } from "shiki" with {
   "resolution-mode": "import",
 };
-import { commands } from "vscode";
 
+import { refreshPreview } from "./preview";
 import { getThemeContributionAndExtensionPath, getThemeFile } from "./theme";
 
 const requestedLanguages = new Set<string>();
 
 let isSpecialLang: (lang: string) => boolean;
 let highlighter: Highlighter;
-let theme: string | undefined;
 
 async function requestLanguage(language: string): Promise<void> {
   if (requestedLanguages.has(language)) {
@@ -28,28 +27,11 @@ async function requestLanguage(language: string): Promise<void> {
   refreshPreview();
 }
 
-export function refreshPreview(): void {
-  commands.executeCommand("markdown.preview.refresh").then(
-    () => {},
-    () => {
-      // The Markdown extension may be disabled; nothing to refresh.
-    },
-  );
-}
-
 export async function createHighlighter(): Promise<void> {
   const shiki = await import("shiki");
 
   isSpecialLang = shiki.isSpecialLang;
   highlighter = await shiki.createHighlighter({ themes: [], langs: [] });
-}
-
-export function getTheme(): string | undefined {
-  return theme;
-}
-
-export function setTheme(name: string | undefined): void {
-  theme = name;
 }
 
 export async function loadTheme(
@@ -87,6 +69,7 @@ export async function loadTheme(
 export function getHighlightedCodeBlock(
   code: string,
   language: string,
+  theme: string | undefined,
 ): string {
   if (!theme) {
     return "";

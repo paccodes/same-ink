@@ -3,15 +3,14 @@ import { ExtensionContext, extensions, window, workspace } from "vscode";
 
 import {
   createHighlighter,
-  getHighlightedCodeBlock as highlight,
-  getTheme,
+  getHighlightedCodeBlock,
   loadTheme,
-  refreshPreview,
-  setTheme,
 } from "./highlighter";
+import { refreshPreview } from "./preview";
 import { affectsActiveColorTheme, getActiveColorTheme } from "./theme";
 
 export async function activate(context: ExtensionContext) {
+  let theme: string | undefined;
   let lastColorTheme: string | undefined;
 
   await createHighlighter();
@@ -35,7 +34,7 @@ export async function activate(context: ExtensionContext) {
       return;
     }
 
-    setTheme(loadedTheme);
+    theme = loadedTheme;
 
     refreshPreview();
   };
@@ -50,7 +49,7 @@ export async function activate(context: ExtensionContext) {
       }
     }),
     extensions.onDidChange(() => {
-      if (!getTheme()) {
+      if (!theme) {
         lastColorTheme = undefined;
 
         reload();
@@ -60,7 +59,10 @@ export async function activate(context: ExtensionContext) {
 
   return {
     extendMarkdownIt(markdown: MarkdownIt): MarkdownIt {
-      return markdown.set({ highlight });
+      return markdown.set({
+        highlight: (code: string, language: string) =>
+          getHighlightedCodeBlock(code, language, theme),
+      });
     },
   };
 }
