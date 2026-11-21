@@ -25,35 +25,6 @@ Install the extension and open any Markdown preview (`Ctrl+Shift+V`).
 - The preview follows the theme you select, not the themes you hover over in the theme picker.
 - Semantic highlighting from language servers isn't available in the preview, so colors match the editor's TextMate highlighting.
 
-## Development
-
-```sh
-npm install
-npm run compile   # or: npm run watch
-```
-
-Press `F5` in VS Code to launch an Extension Development Host with the extension loaded.
-
-To build and install a `.vsix`:
-
-```sh
-npm run package
-code --install-extension same-ink.vsix
-```
-
-Bump `version` in `package.json` before reinstalling, so VS Code picks up the new build.
-
-## Publishing
-
-`npm run publish` compiles, packages `same-ink.vsix`, and publishes that same file to both registries:
-
-| Script | Registry | Token |
-|---|---|---|
-| `npm run publish:vsce` | [Visual Studio Marketplace](https://marketplace.visualstudio.com/manage) | `VSCE_PAT` |
-| `npm run publish:ovsx` | [Open VSX](https://open-vsx.org) (VSCodium, Code - OSS, Cursor…) | `OVSX_PAT` |
-
-Before the first publish, set `publisher` in `package.json` to your publisher ID on both registries, and bump `version` for every release (`npm version patch`).
-
 ## License
 
 [MIT](LICENSE)
