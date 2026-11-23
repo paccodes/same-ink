@@ -1,4 +1,4 @@
-import type MarkdownIt from "markdown-it" with { "resolution-mode": "import" };
+import type MarkdownIt from "markdown-it";
 import { ExtensionContext, extensions, window, workspace } from "vscode";
 
 import {

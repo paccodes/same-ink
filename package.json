@@ -26,21 +26,21 @@
   "publisher": "metaphore",
   "main": "./out/extension.js",
   "files": [
-    "out/**/*.js",
+    "out/extension.js",
+    "out/grammars/*.json",
     "icons/icon.png",
-    "LICENSE",
-    "node_modules/**"
+    "LICENSE"
   ],
   "scripts": {
-    "compile": "tsc -p .",
+    "compile": "tsc -p . && rolldown -c rolldown.config.mts",
     "lint": "oxlint --type-aware --deny-warnings",
-    "package": "vsce package -o same-ink.vsix",
+    "package": "vsce package --no-dependencies -o same-ink.vsix",
     "publish": "npm run package && npm run publish:vsce && npm run publish:ovsx",
     "publish:ovsx": "ovsx publish -i same-ink.vsix",
     "publish:vsce": "vsce publish -i same-ink.vsix",
     "test": "tsc -p test && vitest run",
     "vscode:prepublish": "npm run compile",
-    "watch": "tsc -w -p ."
+    "watch": "rolldown -c rolldown.config.mts -w"
   },
   "contributes": {
     "markdown.markdownItPlugins": true
@@ -58,6 +58,7 @@
     "ovsx": "^1.4.0",
     "oxlint": "^1.94.0",
     "oxlint-tsgolint": "^7.0.2007",
+    "rolldown": "^1.2.19",
     "typescript": "^7.0.2",
     "vitest": "^4.1.12"
   },

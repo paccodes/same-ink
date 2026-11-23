@@ -1,15 +1,41 @@
+import { readFile } from "fs/promises";
 import { join } from "path";
-import type { BundledLanguage, Highlighter } from "shiki" with {
-  "resolution-mode": "import",
-};
+import {
+  createHighlighterCore,
+  type HighlighterCore,
+  isSpecialLang,
+  type LanguageRegistration,
+} from "shiki/core";
+import { createOnigurumaEngine } from "shiki/engine/oniguruma";
 
 import { refreshPreview } from "./preview";
 import { getThemeContributionAndExtensionPath, getThemeFile } from "./theme";
 
-const requestedLanguages = new Set<string>();
+// Written by the build next to the bundle (see rolldown.config.mts).
+const grammarsPath = join(__dirname, "grammars");
 
-let isSpecialLang: (lang: string) => boolean;
-let highlighter: Highlighter;
+const requestedLanguages = new Set<string>();
+const grammarCache = new Map<string, Promise<LanguageRegistration>>();
+
+let grammarIndex: Record<string, string[]>;
+let highlighter: HighlighterCore;
+
+async function readJson<T>(name: string): Promise<T> {
+  return JSON.parse(
+    await readFile(join(grammarsPath, `${name}.json`), "utf8"),
+  ) as T;
+}
+
+function readGrammar(name: string): Promise<LanguageRegistration> {
+  let grammar = grammarCache.get(name);
+
+  if (!grammar) {
+    grammar = readJson<LanguageRegistration>(name);
+    grammarCache.set(name, grammar);
+  }
+
+  return grammar;
+}
 
 async function requestLanguage(language: string): Promise<void> {
   if (requestedLanguages.has(language)) {
@@ -18,8 +44,14 @@ async function requestLanguage(language: string): Promise<void> {
 
   requestedLanguages.add(language);
 
+  if (!Object.hasOwn(grammarIndex, language)) {
+    return;
+  }
+
   try {
-    await highlighter.loadLanguage(language as BundledLanguage);
+    const grammars = await Promise.all(grammarIndex[language].map(readGrammar));
+
+    await highlighter.loadLanguage(...grammars);
   } catch {
     return;
   }
@@ -28,10 +60,14 @@ async function requestLanguage(language: string): Promise<void> {
 }
 
 export async function createHighlighter(): Promise<void> {
-  const shiki = await import("shiki");
-
-  isSpecialLang = shiki.isSpecialLang;
-  highlighter = await shiki.createHighlighter({ themes: [], langs: [] });
+  [grammarIndex, highlighter] = await Promise.all([
+    readJson<Record<string, string[]>>("index"),
+    createHighlighterCore({
+      themes: [],
+      langs: [],
+      engine: createOnigurumaEngine(import("shiki/wasm")),
+    }),
+  ]);
 }
 
 export async function loadTheme(

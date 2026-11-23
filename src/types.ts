@@ -1,6 +1,4 @@
-import type { ThemeRegistration } from "shiki" with {
-  "resolution-mode": "import",
-};
+import type { ThemeRegistration } from "shiki";
 
 export interface ThemeContribution {
   id?: string;
