@@ -33,6 +33,7 @@
   ],
   "scripts": {
     "compile": "tsc -p .",
+    "lint": "oxlint --type-aware --deny-warnings",
     "package": "vsce package -o same-ink.vsix",
     "publish": "npm run package && npm run publish:vsce && npm run publish:ovsx",
     "publish:ovsx": "ovsx publish -i same-ink.vsix",
@@ -55,6 +56,8 @@
     "@types/vscode": "^1.90.0",
     "@vscode/vsce": "^4.1.1",
     "ovsx": "^1.4.0",
+    "oxlint": "^1.94.0",
+    "oxlint-tsgolint": "^7.0.2007",
     "typescript": "^7.0.2",
     "vitest": "^4.1.12"
   },

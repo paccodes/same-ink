@@ -45,14 +45,14 @@ export async function activate(context: ExtensionContext) {
     window.onDidChangeActiveColorTheme(reload),
     workspace.onDidChangeConfiguration((event) => {
       if (affectsActiveColorTheme(event)) {
-        reload();
+        void reload();
       }
     }),
     extensions.onDidChange(() => {
       if (!theme) {
         lastColorTheme = undefined;
 
-        reload();
+        void reload();
       }
     }),
   );
