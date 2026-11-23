@@ -1,0 +1,4 @@
+{
+  "colors": { "editor.background": "#000000" },
+  "tokenColors": "./base.tmTheme"
+}

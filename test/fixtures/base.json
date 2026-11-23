@@ -1,0 +1,6 @@
+{
+  // Theme files are JSON with comments.
+  "colors": { "editor.background": "#000000", "editor.foreground": "#ffffff" },
+  "semanticTokenColors": { "variable": "#111111", "function": "#222222" },
+  "tokenColors": [{ "scope": "comment", "settings": { "foreground": "#333333" } }]
+}

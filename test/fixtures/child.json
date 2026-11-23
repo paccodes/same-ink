@@ -1,0 +1,6 @@
+{
+  "include": "./base.json",
+  "colors": { "editor.background": "#101010" },
+  "semanticTokenColors": { "function": "#999999" },
+  "tokenColors": [{ "scope": "string", "settings": { "foreground": "#444444" } }]
+}

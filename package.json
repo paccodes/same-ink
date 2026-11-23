@@ -37,6 +37,7 @@
     "publish": "npm run package && npm run publish:vsce && npm run publish:ovsx",
     "publish:ovsx": "ovsx publish -i same-ink.vsix",
     "publish:vsce": "vsce publish -i same-ink.vsix",
+    "test": "tsc -p test && vitest run",
     "vscode:prepublish": "npm run compile",
     "watch": "tsc -w -p ."
   },
@@ -54,7 +55,8 @@
     "@types/vscode": "^1.90.0",
     "@vscode/vsce": "^4.1.1",
     "ovsx": "^1.4.0",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.12"
   },
   "engines": {
     "vscode": "^1.90.0"

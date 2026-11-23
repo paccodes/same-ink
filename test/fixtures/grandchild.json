@@ -1,0 +1,4 @@
+{
+  "include": "child.json",
+  "tokenColors": [{ "scope": "keyword", "settings": { "foreground": "#555555" } }]
+}
