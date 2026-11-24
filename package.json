@@ -4,13 +4,17 @@
   "version": "0.1.0",
   "description": "Highlights code blocks in the Markdown preview with your current editor color theme.",
   "categories": [
-    "Other"
+    "Visualization",
+    "Programming Languages"
   ],
   "keywords": [
     "markdown",
     "preview",
+    "markdown preview",
     "syntax highlighting",
+    "code highlighting",
     "code blocks",
+    "theme",
     "color theme",
     "shiki"
   ],
